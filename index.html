@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Github stuff -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- P5.js  -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+  <title>Path Finder</title>
+
+  <style>
+    .square {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Add your custom styles here */
+    .beautiful-select {
+      border: 2px solid #3498db;
+      border-radius: 5px;
+      padding: 8px 15px;
+      font-size: 16px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .beautiful-select:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+    }
+  </style>
+
+</head>
+
+<body style="font-family: 'Raleway', sans-serif;">
+  <div class="container-fluid w-100 m-0 p-0" style="height: 100vh;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <h3><strong>Path Finder</strong></h3>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto nav-fill w-100 align-items-center">
+            <li class="nav-item">
+              <select class="form-select beautiful-select" id="algorithmSelect" aria-label="Default select example">
+                <option value="0" selected>Select Algorithm</option>
+                <option value="1">A* Search Algorithm</option>
+                <option value="2">Dijkstra Algorithm</option>
+                <option value="3">Breadth First Search Algorithm</option>
+                <option value="4">Depth First Search Algorithm</option>
+                <option value="5">Greedy Best First Search Algorithm</option>
+              </select>
+            </li>
+            <!-- <li class="nav-item dropdown active">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Algorithms
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#" onclick="dropdown(event)">A* Search</a>
+                <a class="dropdown-item" href="#" onclick="dropdown(event)">Dijkstra</a>
+                <a class="dropdown-item" href="#" onclick="dropdown(event)">Breadth First Search</a>
+                <a class="dropdown-item" href="#" onclick="dropdown(event)">Depth First Search</a>
+                <a class="dropdown-item" href="#" onclick="dropdown(event)">Greedy Best First Search</a>
+              </div>
+            </li> -->
+            <li class="nav-item">
+              <button class="btn btn-dark my-2 my-sm-0" id="startButton" type="submit">Visualize</button>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#" onclick="throwObstacles()">Throw Obstacles<span
+                  class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#" onclick="resetCanvas()">Clear<span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid pt-4 pb-0">
+      <div class="row text-center" style="font-size: 14px;">
+        <div class="col-sm-6 col-md">
+          <div>
+            <span class="square" style="background-color:rgb(87,50,168);"></span>
+            Source
+          </div>
+        </div>
+        <div class="col-sm-6 col-md">
+          <div>
+            <span class="square" style="background-color:rgb(140,68,20);"></span>
+            Destination
+          </div>
+        </div>
+        <div class="col-sm-6 col-md">
+          <div>
+            <span class="square" style="background-color:rgb(128,128,128);"></span>
+            Obstacles
+          </div>
+        </div>
+        <div class="col-sm-6 col-md">
+          <div>
+            <span class="square" style="background-color:rgb(45, 196, 129);"></span>
+            Unxplored Nodes
+          </div>
+        </div>
+        <div class="col-sm-6 col-md">
+          <div>
+            <span class="square" style="background-color:rgb(255, 205, 205);"></span>
+            Explored Nodes
+          </div>
+        </div>
+        <div class="col-sm-6 col-md">
+          <div>
+            <span class="square" style="background-color:rgb(255, 0, 200);"></span>
+            Path
+          </div>
+        </div>
+      </div>
+      <div class="row align-items-center" style="min-height: 60px;">
+        <div class="col text-center" style="background-color: rgb(166, 239, 252);">
+          <span id="message" style="font-style: italic;"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="sketch01" style="position: relative;"> </div>
+  </div>
+
+
+  <!-- Optional JavaScript -->
+  <script type="text/javascript" src="index.js"></script>
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
